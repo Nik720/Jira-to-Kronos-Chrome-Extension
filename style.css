@@ -1,107 +1,69 @@
+* {
+    box-sizing: border-box;
+  }
+
 body {
     font-family: "Open Sans", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
-    min-width: 700px;
-}
-
-table {
-    width: 100%;
-    border-spacing: 4px;
-}
-
-td {
-    padding: 2px 0px;
-    text-align: center;
-}
-
-td:nth-of-type(3) {
-    text-align: left;
-}
-
-#status {
-    color: #11dda9;
-}
-
-td.success {
-    background-color: #1987ac;
-    color: white;
-    font-weight: bold;
-    text-align: center;
-}
-
-td.info {
-    background-color: lightgreen;
-    color: black;
-    font-weight: bold;
-    text-align: center;
-}
-
-td>a {
-    white-space: nowrap;
-}
-
-p.error {
-    padding: 1em;
-    background-color: #cc3329;
-    color: white;
-    font-weight: bold;
-    text-align: center;
-}
-
-button {
-    border-radius: 1px;
-    font-family: "Open Sans", Arial, sans-serif;
-    font-size: 14px;
-    border: 1px solid transparent;
+    width: 300px;
     margin: 0;
-    padding: 7px 5px;
-    position: relative;
-    text-align: center;
-    text-decoration: none;
-    -moz-transition: all .1s;
-    -o-transition: all .1s;
-    -webkit-transition: all .1s;
-    transition: all .1s;
-    font-size: 11px;
-    color: #929292;
-    margin-top: 5px;
-    font-weight: 600;
-    background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(0%, #f5f5f5), color-stop(100%, #eee));
-    background-image: -moz-linear-gradient(#f5f5f5, #eee);
-    background-image: -webkit-linear-gradient(#f5f5f5, #eee);
-    background-image: linear-gradient(#f5f5f5, #eee);
-    width: auto;
-    cursor: pointer;
+    font-size: 13px;
+}
+
+.m0 {
+    margin:0;
+}
+
+.mt-0 {
+    margin-top:0;
+}
+
+  .container {
+    padding: 16px;
+    background-color: white;
+  }
+  
+  input[type=text], input[type=password] {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
     display: inline-block;
-}
-
-button#submit {
-    background-color: #1987ac;
-    background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(0%, #5195d4), color-stop(100%, #1987ac));
-    background-image: -moz-linear-gradient(#5195d4, #1987ac);
-    background-image: -webkit-linear-gradient(#5195d4, #1987ac);
-    background-image: linear-gradient(#5195d4, #1987ac);
+    border: 1px solid #d8d6d6;
+    background: #f1f1f1;
+  }
+  
+  input[type=text]:focus, input[type=password]:focus {
+    background-color: #ddd;
+    outline: none;
+  }
+  
+  hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+  }
+  
+  .btn {
+    background: #008CBA;
     color: white;
-}
-
-i {
-    font-size: 80%;
-}
-
-button:hover {
-    background-size: 100%;
-    background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(0%, #f5f5f5), color-stop(100%, #eee));
-    background-image: -moz-linear-gradient(#f5f5f5, #eee);
-    background-image: -webkit-linear-gradient(#f5f5f5, #eee);
-    background-image: linear-gradient(#f5f5f5, #eee);
-    border-color: #e6e6e6;
-    -moz-box-shadow: inset 0 -1px 0 #e6e6e6;
-    -webkit-box-shadow: inset 0 -1px 0 #e6e6e6;
-    box-shadow: inset 0 -1px 0 #e6e6e6;
-    color: #595959;
-}
-
-fieldset {
+    padding: 10px 20px;
+    margin: 8px 0;
     border: none;
-    background-color: #eee;
-}
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 3px;
+    box-shadow: 0 2px 0px #0f6480;
+    outline:0;
+  }
+  
+  .btn:hover {
+    background: #008CBA;
+    opacity: 1;
+    color: white;
+  }
+
+  #status {
+    color: green;
+  }
