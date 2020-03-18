@@ -1,28 +1,26 @@
 
+var logDetails = '';
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if(request.evtName === 'logToKronos') {
         const workLog = JSON.parse(request.efforts);
-        console.log(workLog)
-        const minutes = await getHoursToMinutes(workLog.timeSpent);
-        console.log("Totoal minutes = ", minutes)
-        
-        const logDetails = {
+        const minutes = getHoursToMinutes(workLog.timeSpent);
+        logDetails = {
             "time": [
                 {
                     "date": getCurrentDate(),
-                    "pid": 1259,
+                    "pid": 1241,
                     "tid": 138,
-                    "fid": 234,
+                    "fid": 230,
                     "minute": minutes,
                     "note": workLog.comment.content[0].content[0].text,
                     "locId": null,
                     "billable": true,
                     "onSite": false,
-                    "activityRefNumber": "nikunj@tarento.com#"+uuidv4()
+                    "activityRefNumber": uuidv4()
                 }
             ]
         }
-        await logTimetoKronos(logDetails);
+        getAuthToken();
     }
 });
 
@@ -33,7 +31,6 @@ function uuidv4() {
     });
 }
   
-
 function getCurrentDate() {
     var d = new Date();
     var month = d.getMonth()+1;
@@ -44,7 +41,7 @@ function getCurrentDate() {
     return output;
 }
 
-getHoursToMinutes (async (time) => {
+function getHoursToMinutes (time) {
     const timeArr = time.split(" ");
     var minutes = 0;
     timeArr.forEach(elm => {
@@ -66,11 +63,12 @@ getHoursToMinutes (async (time) => {
         }
     });
     return minutes;
-})
+}
  
-logTimetoKronos (async (details) => {
-    console.log(details);
-    const authToken = await getAuthToken();
+function logTimetoKronos (userData) {
+    let authToken = userData.sessionId
+    logDetails.time[0].activityRefNumber = `${userData.email}#${uuidv4()}`;
+    console.log(logDetails);
     $.ajax({
         // tarento URL: https://kronos.idc.tarento.com/api/v1/user/saveTaskTimeForProject
         // ekstep URL: https://kronos.idc.tarento.com/api/v1/user/saveTaskTimeForProjectFeature
@@ -78,45 +76,60 @@ logTimetoKronos (async (details) => {
         url : "https://kronos.idc.tarento.com/api/v1/user/saveTaskTimeForProjectFeature",
         type: "POST",
         contentType: 'application/json; charset=utf-8',
-        data : JSON.stringify(details),
+        data : JSON.stringify(logDetails),
         dataType: 'json',
         headers: {
             "Authorization": authToken
         },
-        success: function(data, textStatus, jqXHR)
+        success: function(data)
         {
             console.log(data)
         },
-        error: function (jqXHR, textStatus, errorThrown)
+        error: function (jqXHR)
         {
-            console(jqXHR);
+            console("error while adding logs to kronos. ",jqXHR);
         }
     });
-})
+}
 
-getAuthToken( async () => {
+function getAuthToken( ) {
     const userDetails = {
-        "username":"nikunj@tarento.com",
-        "password":"NIKunj@123"
+        "username": "",
+        "password": ""
     }
-    let authToken = '';
-    $.ajax({
-        url : "https://kronos.idc.tarento.com/api/v1/user/login",
-        type: "POST",
-        contentType: 'application/json; charset=utf-8',
-        data : JSON.stringify(userDetails),
-        dataType: 'json',
-        async: false,
-        success: function(data, textStatus, jqXHR)
-        {
-            if(data.statusCode == 200) {
-                authToken = data.responseData.sessionId
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown)
-        {
-            console(jqXHR);
+    chrome.storage.sync.get({
+        email: '',
+        password: '',
+    }, function (items) {
+        userDetails.username = items.email ? items.email : '';
+        userDetails.password = items.password ? items.password : '';
+        console.log(userDetails);
+        if(userDetails.username !== "" && userDetails.password !== "") {
+            $.ajax({
+                url : "https://kronos.idc.tarento.com/api/v1/user/login",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data : JSON.stringify(userDetails),
+                dataType: 'json',
+                async: false,
+                success: function(data, textStatus, jqXHR)
+                {
+                    if(data.statusCode == 200) {
+                        logTimetoKronos(data.responseData);
+                    } else if(data.statusCode == 400) {
+                        alert("Invalid Kronos credentials. Please try again.");
+                        return false;
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    console(jqXHR);
+                }
+            });
+        } else {
+            alert("Please sign to kronos using plugin.")
+            return false;
         }
     });
-    return authToken;
-})
+    
+}
