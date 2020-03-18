@@ -68,7 +68,6 @@ function getHoursToMinutes (time) {
 function logTimetoKronos (userData) {
     let authToken = userData.sessionId
     logDetails.time[0].activityRefNumber = `${userData.email}#${uuidv4()}`;
-    console.log(logDetails);
     $.ajax({
         // tarento URL: https://kronos.idc.tarento.com/api/v1/user/saveTaskTimeForProject
         // ekstep URL: https://kronos.idc.tarento.com/api/v1/user/saveTaskTimeForProjectFeature
@@ -103,7 +102,6 @@ function getAuthToken( ) {
     }, function (items) {
         userDetails.username = items.email ? items.email : '';
         userDetails.password = items.password ? items.password : '';
-        console.log(userDetails);
         if(userDetails.username !== "" && userDetails.password !== "") {
             $.ajax({
                 url : "https://kronos.idc.tarento.com/api/v1/user/login",
