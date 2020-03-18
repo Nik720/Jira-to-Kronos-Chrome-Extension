@@ -42,7 +42,7 @@ body {
     margin-bottom: 25px;
   }
   
-  .registerbtn {
+  .btn {
     background: #008CBA;
     color: white;
     padding: 10px 20px;
@@ -58,8 +58,12 @@ body {
     outline:0;
   }
   
-  .registerbtn:hover {
+  .btn:hover {
     background: #008CBA;
     opacity: 1;
     color: white;
+  }
+
+  #status {
+    color: green;
   }
