@@ -48,7 +48,8 @@ function getHoursToMinutes (time) {
         const caseIndex = elm.charAt(elm.length-1);
         switch (caseIndex) {
             case "d":
-                minutes += parseInt(8 * 60);
+                let day = elm.substring(0, elm.length-1);
+                minutes += (parseInt(day) * 8) * 60;
                 break;
             case "h":
                 let hr = elm.substring(0, elm.length-1);
