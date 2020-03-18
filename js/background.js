@@ -27,6 +27,6 @@ chrome.webRequest.onBeforeRequest.addListener((details) => {
 chrome.browserAction.onClicked.addListener(function () {
     // No tabs or host permissions needed!
     chrome.tabs.executeScript({
-        file: 'parser.js'
+        file: 'js/parser.js'
     });
 });

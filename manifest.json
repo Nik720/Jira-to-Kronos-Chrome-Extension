@@ -9,13 +9,13 @@
         "webRequestBlocking",
         "background",
         "activeTab",
-        "<all_urls>"
+        "https://project-sunbird.atlassian.net/*"
     ],
     "icons": {
-        "32": "toggl2jira_32.png",
-        "16": "toggl2jira_16.png",
-        "48": "toggl2jira_48.png",
-        "128": "toggl2jira_128.png"
+        "32": "/images/kronos_32.png",
+        "16": "/images/kronos_16.png",
+        "48": "/images/kronos_48.png",
+        "128": "/images/kronos_128.png"
     },
     "background": {
         "page": "background.html"
@@ -24,11 +24,11 @@
         "default_title": "Log Toggl.com entries to Jira",
         "default_popup": "popup.html"
     },
-    "options_page": "options.html",
     "content_scripts": [{
-        "matches": ["http://*/*", "https://*/*"],
-        "js": ["jquery.min.js", "lodash.core.js", "content.js"],
+        "matches": ["https://project-sunbird.atlassian.net/*"],
+        "js": ["/js/jquery.min.js", "/js/lodash.core.js", "/js/content.js"],
         "run_at": "document_start"
     }],
-    "manifest_version": 2
+    "manifest_version": 2,
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';"
 }
