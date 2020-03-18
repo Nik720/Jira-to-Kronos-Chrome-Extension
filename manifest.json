@@ -1,0 +1,34 @@
+{
+    "name": "Jira to Kronos",
+    "description": "Logs Jira efforts to Kronos",
+    "version": "1.0.0",
+    "permissions": [
+        "storage",
+        "tabs",
+        "webRequest",
+        "webRequestBlocking",
+        "background",
+        "activeTab",
+        "<all_urls>"
+    ],
+    "icons": {
+        "32": "toggl2jira_32.png",
+        "16": "toggl2jira_16.png",
+        "48": "toggl2jira_48.png",
+        "128": "toggl2jira_128.png"
+    },
+    "background": {
+        "page": "background.html"
+    },
+    "browser_action": {
+        "default_title": "Log Toggl.com entries to Jira",
+        "default_popup": "popup.html"
+    },
+    "options_page": "options.html",
+    "content_scripts": [{
+        "matches": ["http://*/*", "https://*/*"],
+        "js": ["jquery.min.js", "lodash.core.js", "content.js"],
+        "run_at": "document_start"
+    }],
+    "manifest_version": 2
+}
