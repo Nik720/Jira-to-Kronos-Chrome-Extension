@@ -11,20 +11,19 @@
     </head>
 
     <body>
-        <form action="javascript:void(0)">
-            <div class="container">
-              <h1 class="mt-0"> Login to Kronos</h1>
-              <hr>
-              <label for="email"><b>Email Address</b></label>
-              <input type="text" placeholder="Enter Email" name="email" id="email" required>
+          <div class="container">
+            <h1 class="mt-0 mb-5"> Login to Kronos</h1>
+            <span id="isUserCredSaved"></span>
+            <hr>
+            <label for="email"><b>Email Address</b></label>
+            <input type="text" placeholder="Enter Email" name="email" id="email" required>
+        
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="password" id="password" required>
           
-              <label for="password"><b>Password</b></label>
-              <input type="password" placeholder="Enter Password" name="password" id="password" required>
-           
-              <button type="submit" id="save" class="btn">Save</button>
-              <span id="status"></span>
-            </div>
-          </form>
+            <button type="submit" id="save" class="btn">Save</button>
+            <span id="status"></span>
+          </div>
           <script src="./js/parser.js">
           </script>
     </body>
