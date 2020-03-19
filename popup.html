@@ -1,39 +1,38 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Login to Kronos</title>
-        <script src="./js/jquery.min.js">
-        </script>
-        <script src="./js/lodash.core.js">
-        </script>
 
-        <link href="./css/style.css" rel="stylesheet" type="text/css" />
-    </head>
+<head>
+  <title>Login to Kronos</title>
+  <script src="./js/jquery.min.js">
+  </script>
+  <script src="./js/lodash.core.js">
+  </script>
 
-    <body>
-        <form action="javascript:void(0)">
-            <div class="container">
-              <h1 class="mt-0"> Login to Kronos</h1>
-              <hr>
-              <span id="loggedMsg" style="display: none;"> 
-                <img src="./images/ok.png" alt="">  &nbsp; You have already logged in.</span>
-              <div class="form-group">
-                <label for="email"><b>Email Address</b></label>
-                <input class="form-control" type="email" placeholder="Enter Email" name="email" id="email" required>
-                <span class="error"></span>
-              </div>
-              <div class="form-group">
-                <label for="password"><b>Password</b></label>
-                <input class="form-control" type="password" placeholder="Enter Password" name="password" id="password" required>
-                <span class="error"></span>
-              </div>  
-              
-              <button type="submit" id="save" class="btn">Save</button>
-              <span id="status"></span>
-            </div>
-          </form>
-          <script src="./js/parser.js">
-          </script>
-    </body>
+  <link href="./css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="mt-0"> Login to Kronos</h1>
+    <hr>
+    <span id="loggedMsg" style="display: none;">
+      <img src="./images/ok.png" alt=""> &nbsp; You have already logged in.</span>
+    <div class="form-group">
+      <label for="email"><b>Email Address</b></label>
+      <input class="form-control" type="email" placeholder="Enter Email" name="email" id="email" required>
+      <span class="error"></span>
+    </div>
+    <div class="form-group">
+      <label for="password"><b>Password</b></label>
+      <input class="form-control" type="password" placeholder="Enter Password" name="password" id="password" required>
+      <span class="error"></span>
+    </div>
+
+    <button type="submit" id="save" class="btn">Save</button>
+    <span id="status"></span>
+  </div>
+  <script src="./js/parser.js">
+  </script>
+</body>
 
 </html>

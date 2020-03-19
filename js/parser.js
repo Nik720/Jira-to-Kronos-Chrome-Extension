@@ -15,13 +15,32 @@ function saveOptions() {
         email: email,
         password: password,
     }, function () {
-        // Update status to let user know options were saved.
-        var status = document.getElementById('status');
-        status.textContent = 'Email address and password saved.';
-        setTimeout(function () {
-            status.textContent = '';
-            window.close();
-        }, 750);
+         // Update status to let user know options were saved.
+         const userDetails = {
+            "username": email,
+            "password": password
+        }
+        $.ajax({
+            url : "https://kronos.idc.tarento.com/api/v1/user/login",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data : JSON.stringify(userDetails),
+            dataType: 'json',
+            success: function(data, textStatus, jqXHR)
+            {
+                if(data.statusCode == 200) {
+                    var status = document.getElementById('status');
+                    status.textContent = 'Email address and password saved.';
+                    setTimeout(function () {
+                        status.textContent = '';
+                        window.close();
+                    }, 750);
+                } else if(data.statusCode == 400) {
+                    alert("Invalid Kronos credentials. Please try again.");
+                    return false;
+                }
+            }
+        });
         
     });
 }
