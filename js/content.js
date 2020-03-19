@@ -118,7 +118,6 @@ function getAuthToken( ) {
                 contentType: 'application/json; charset=utf-8',
                 data : JSON.stringify(userDetails),
                 dataType: 'json',
-                async: false,
                 success: function(data, textStatus, jqXHR)
                 {
                     if(data.statusCode == 200) {
