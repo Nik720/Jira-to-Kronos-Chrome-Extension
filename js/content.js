@@ -47,6 +47,10 @@ function getHoursToMinutes (time) {
     timeArr.forEach(elm => {
         const caseIndex = elm.charAt(elm.length-1);
         switch (caseIndex) {
+            case "w":
+                let week = elm.substring(0, elm.length-1);
+                minutes += (parseInt(week) * 5 * 8) * 60;
+                break;
             case "d":
                 let day = elm.substring(0, elm.length-1);
                 minutes += (parseInt(day) * 8) * 60;
