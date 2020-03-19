@@ -4,15 +4,16 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if(request.evtName === 'logToKronos') {
         const workLog = JSON.parse(request.efforts);
         const minutes = getHoursToMinutes(workLog.timeSpent);
+        const issueId = request.url.split('issue/')[1].split('/worklog')[0];
         logDetails = {
             "time": [
                 {
-                    "date": getCurrentDate(),
+                    "date": getCurrentDate(workLog.started),
                     "pid": 1241,
                     "tid": 138,
                     "fid": 230,
                     "minute": minutes,
-                    "note": workLog.comment.content[0].content[0].text,
+                    "note": `Issue ${issueId} - ${workLog.comment.content[0].content[0].text}`,
                     "locId": null,
                     "billable": true,
                     "onSite": false,
@@ -31,8 +32,8 @@ function uuidv4() {
     });
 }
   
-function getCurrentDate() {
-    var d = new Date();
+function getCurrentDate(date) {
+    var d = new Date(date);
     var month = d.getMonth()+1;
     var day = d.getDate();
     var output = d.getFullYear() + '-' +
@@ -42,7 +43,7 @@ function getCurrentDate() {
 }
 
 function getHoursToMinutes (time) {
-    const timeArr = time.split(" ");
+    const timeArr = time.split(" ");    
     var minutes = 0;
     timeArr.forEach(elm => {
         const caseIndex = elm.charAt(elm.length-1);
@@ -87,7 +88,10 @@ function logTimetoKronos (userData) {
         },
         success: function(data)
         {
-            console.log(data)
+            if(data.statusCode === 320) {
+                alert(`This particular date ${logDetails.time[0].date}  is locked in kronos. Please add time log manually in kronos.`)
+                return false;
+            }
         },
         error: function (jqXHR)
         {

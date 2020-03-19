@@ -16,8 +16,13 @@ chrome.webRequest.onBeforeRequest.addListener((details) => {
             var postedString = decodeURIComponent(String.fromCharCode.apply(null,
             new Uint8Array(details.requestBody.raw[0].bytes)));
             console.log(postedString)
+            const requestMessage = {
+                evtName: "logToKronos", 
+                efforts: postedString,
+                url: details.url
+            }
             chrome.tabs.query({active: true, currentWindow: true},function(tabs) {
-                chrome.tabs.sendMessage(tabs[0].id, {evtName: "logToKronos", efforts: postedString});
+                chrome.tabs.sendMessage(tabs[0].id, requestMessage);
             }); 
         }
     }
