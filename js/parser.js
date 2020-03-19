@@ -51,7 +51,11 @@ function restoreOptions() {
     }, function (items) {
         document.getElementById('email').value = items.email ? items.email : '';
         document.getElementById('password').value = items.password ? items.password : '';
-        
+        if(items.email && items.password) {
+            $("#loggedMsg").show();
+        } else {
+            $("#loggedMsg").hide();
+        }
     });
 }
 
