@@ -23,23 +23,46 @@ body {
     background-color: white;
   }
   
-  input[type=text], input[type=password] {
+  .error {
+    color: red;
+    margin-top: 3px;
+    display:block;
+  }
+
+  .form-group {
+    position: relative;
+    margin-bottom:15px;
+  }
+
+  .form-group label {
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  input.form-control {
     width: 100%;
     padding: 15px;
-    margin: 5px 0 22px 0;
     display: inline-block;
     border: 1px solid #d8d6d6;
     background: #f1f1f1;
   }
   
-  input[type=text]:focus, input[type=password]:focus {
+  input.form-control:focus, input.form-control:focus {
     background-color: #ddd;
     outline: none;
   }
-  
+
+  .form-group.has-error input.form-control {
+    border-color: red;
+  }
+
+  .form-group.has-error label {
+    color: red;  
+  }
+
   hr {
     border: 1px solid #f1f1f1;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
   }
   
   .btn {
@@ -66,4 +89,19 @@ body {
 
   #status {
     color: green;
+  }
+
+
+  #loggedMsg {
+    display: block;
+    margin-bottom: 10px;
+    color: green;
+    font-weight: 700;
+    font-size: 13px;
+    background-color: #e2efe2;
+    padding: 5px 10px;
+    border-radius: 3px;
+    border: 1px solid #bed9be;
+    display: flex;
+    align-items: center;
   }
