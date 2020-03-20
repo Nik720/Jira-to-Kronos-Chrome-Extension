@@ -76,21 +76,20 @@ function restoreOptions() {
     }, function (items) {
         document.getElementById('email').value = items.email ? items.email : '';
         document.getElementById('password').value = items.password ? items.password : '';
-        if(items.email && items.password) {
-            $("#loggedMsg,#login").toggle();
+        if(items.email != '' && items.password != '') {
+            $("#loggedMsg").show();
+            $("#login").hide();
         } else {
-            $("#loggedMsg,#login").toggle();
+            $("#loggedMsg").hide();
+            $("#login").show();
         }
     });
 }
-
 
 function toogleBlock() {
     $("#loggedMsg,#login").toggle();
 }
 
-
 document.addEventListener('DOMContentLoaded', restoreOptions);
 document.getElementById('save').addEventListener('click', saveOptions);
 document.getElementById('editDetails').addEventListener('click', toogleBlock);
-
