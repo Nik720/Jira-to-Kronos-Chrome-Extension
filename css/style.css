@@ -95,17 +95,29 @@ body {
     color: green;
   }
 
+  .mb-15 {
+    margin-bottom: 15px !important;
+  }
 
-  #loggedMsg {
+  .alert {
     display: block;
-    margin-bottom: 15px;
-    color: green;
+    margin-bottom: 5px;
     font-weight: 700;
     font-size: 13px;
-    background-color: #e2efe2;
     padding: 5px 10px;
     border-radius: 3px;
-    border: 1px solid #bed9be;
     display: flex;
     align-items: center;
+  }
+
+  .alert.alert-success {
+    color: green;
+    background-color: #e2efe2;
+    border: 1px solid #bed9be;
+  }
+
+  .alert.alert-error {
+    color: red;
+    background-color: #ffe9e9;
+    border: 1px solid #f5a9a9;
   }

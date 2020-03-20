@@ -27,7 +27,10 @@ function saveOptions() {
             if(data.statusCode == 200) {
                 saveCredentials(userDetails);
             } else if(data.statusCode == 400) {
-                alert("Invalid Kronos credentials. Please try again.");
+                $("#loggedErr").show();
+                // setTimeout(function () {
+                //     $("#loggedErr").hide();
+                // }, 1000);
                 return false;
             }
         }
@@ -74,12 +77,20 @@ function restoreOptions() {
         document.getElementById('email').value = items.email ? items.email : '';
         document.getElementById('password').value = items.password ? items.password : '';
         if(items.email && items.password) {
-            $("#loggedMsg").show();
+            $("#loggedMsg,#login").toggle();
         } else {
-            $("#loggedMsg").hide();
+            $("#loggedMsg,#login").toggle();
         }
     });
 }
 
+
+function toogleBlock() {
+    $("#loggedMsg,#login").toggle();
+}
+
+
 document.addEventListener('DOMContentLoaded', restoreOptions);
 document.getElementById('save').addEventListener('click', saveOptions);
+document.getElementById('editDetails').addEventListener('click', toogleBlock);
+
