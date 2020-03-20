@@ -28,9 +28,9 @@ function saveOptions() {
                 saveCredentials(userDetails);
             } else if(data.statusCode == 400) {
                 $("#loggedErr").show();
-                // setTimeout(function () {
-                //     $("#loggedErr").hide();
-                // }, 1000);
+                setTimeout(function () {
+                    $("#loggedErr").hide();
+                }, 1000);
                 return false;
             }
         }
