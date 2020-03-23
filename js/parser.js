@@ -10,12 +10,10 @@ function saveOptions() {
     } else if(password == '') {
         return setValidationMsg('password','Password is required');
     }
-
     const userDetails = {
         "username": email,
         "password": password
     }
-
     $.ajax({
         url : "https://kronos.idc.tarento.com/api/v1/user/login",
         type: "POST",
@@ -25,6 +23,7 @@ function saveOptions() {
         success: function(data, textStatus, jqXHR)
         {
             if(data.statusCode == 200) {
+                userDetails.authToken = data.responseData.sessionId
                 saveCredentials(userDetails);
             } else if(data.statusCode == 400) {
                 $("#loggedErr").show();
@@ -37,27 +36,29 @@ function saveOptions() {
     });
 }
 
-function saveCredentials(data) {
+async function saveCredentials(data) {
     chrome.storage.sync.set({
         email: data.username,
         password: data.password,
+        authToken: data.authToken
     }, function () {
         var status = document.getElementById('status');
         status.textContent = 'Email address and password saved.';
         setTimeout(function () {
             status.textContent = '';
             window.close();
+            chrome.tabs.create({ url: "options.html" });
         }, 750);
     });
 }
 
-function setValidationMsg(selector,errMsg) {
+async function setValidationMsg(selector,errMsg) {
     $(".form-group").removeClass("has-error").find(".error").html("");
     $('#'+selector).parent(".form-group").addClass("has-error").find(".error").html(errMsg);
     return false;
 }
 
-function IsEmail(email) {
+async function IsEmail(email) {
     var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     if(!regex.test(email)) {
       return false;

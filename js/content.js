@@ -5,23 +5,28 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         const workLog = JSON.parse(request.efforts);
         const minutes = getHoursToMinutes(workLog.timeSpent);
         const issueId = request.url.split('issue/')[1].split('/worklog')[0];
-        logDetails = {
-            "time": [
-                {
-                    "date": getCurrentDate(workLog.started),
-                    "pid": 1241,
-                    "tid": 138,
-                    "fid": 230,
-                    "minute": minutes,
-                    "note": `Issue ${issueId} - ${workLog.comment.content[0].content[0].text}`,
-                    "locId": null,
-                    "billable": true,
-                    "onSite": false,
-                    "activityRefNumber": uuidv4()
-                }
-            ]
-        }
-        getAuthToken();
+        chrome.storage.sync.get({
+            project: '',
+            task: '',
+        }, function (items) {
+            logDetails = {
+                "time": [
+                    {
+                        "date": getCurrentDate(workLog.started),
+                        "pid": items.project !== '' ? items.project : 1241,
+                        "tid": items.task !== '' ? items.task : 138,
+                        "fid": 230,
+                        "minute": minutes,
+                        "note": `Issue ${issueId} - ${workLog.comment.content[0].content[0].text}`,
+                        "locId": null,
+                        "billable": true,
+                        "onSite": false,
+                        "activityRefNumber": uuidv4()
+                    }
+                ]
+            }
+            getAuthToken();
+        });
     }
 });
 
