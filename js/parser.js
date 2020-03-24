@@ -1,3 +1,4 @@
+var taskList;
 // Saves options to chrome.storage
 function saveOptions() {
     var email = $("#email").val();
@@ -74,6 +75,8 @@ function restoreOptions() {
     chrome.storage.sync.get({
         email: '',
         password: '',
+        taskList: '',
+        loggedTaskList: ''
     }, function (items) {
         document.getElementById('email').value = items.email ? items.email : '';
         document.getElementById('password').value = items.password ? items.password : '';
@@ -81,11 +84,32 @@ function restoreOptions() {
             $("#loggedMsg").show();
             $("#login").hide();
             $("#editDetails").show();
+
+            if(items.loggedTaskList !== "") {
+                console.log(items.loggedTaskList);
+                prepareTaskTable(items.loggedTaskList)
+            }
+
         } else {
             $("#loggedMsg").hide();
             $("#login").show();
             $("#editDetails").hide();
         }
+        if(items.taskList !== "") {
+            const tList = JSON.parse(items.taskList);
+            var taskOptions = "<option value=''>Select Task</option>";
+            tList.forEach(task => {
+                taskOptions += `<option value="${task.id}" >${task.name}</option>`;
+            });
+            taskList = taskOptions;
+        }
+    });
+}
+
+function prepareTaskTable(loggedList) {
+    const loggedListJson = JSON.parse(loggedList);
+    loggedListJson.forEach(list => {
+        console.log(list)
     });
 }
 
@@ -97,6 +121,7 @@ $(document).ready(function(){
     $("#addNewTaskBtn").on('click', function(){
         $("#loggedMsg").hide();
         $("#addTaskSec").show();
+        $("#newTasks").html(taskList);
     })
 
     $("#cancelFrmBtn").on('click', function(){

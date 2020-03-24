@@ -1,5 +1,6 @@
 (function () {
     var projectMetaData = "";
+    var taskOptionList = []
     $(document).ready(function(){
         chrome.storage.sync.get({
             email: '',
@@ -16,9 +17,11 @@
             });
             const taskArrayIds = taskList[0].taskList;
             var taskOptions = "<option value=''>Select Task</option>";
+            taskOptionList = [];
             projectMetaData.taskList.forEach(task => {
                 if(taskArrayIds.includes(task.id)) {
                     taskOptions += `<option value="${task.id}" >${task.name}</option>`;
+                    taskOptionList.push(task);
                 }
             });
             $("#tasks").html(taskOptions);
@@ -75,7 +78,8 @@
 
         chrome.storage.sync.set({
             project: project,
-            task: task
+            task: task,
+            taskList: JSON.stringify(taskOptionList)
         }, function() {
             alert("Details are saved !!");
             window.close();
