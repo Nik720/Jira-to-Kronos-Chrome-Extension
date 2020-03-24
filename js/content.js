@@ -1,5 +1,6 @@
 
 var logDetails = '';
+console.log("content script")
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if(request.evtName === 'logToKronos') {
         const workLog = JSON.parse(request.efforts);
@@ -9,6 +10,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
             project: '',
             task: '',
         }, function (items) {
+            const notes = (workLog.comment.content[0].content.length > 0) ? `Issue ${issueId} - ${workLog.comment.content[0].content[0].text}` : `Issue ${issueId} ` ; 
             logDetails = {
                 "time": [
                     {
@@ -17,7 +19,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                         "tid": items.task !== '' ? items.task : 138,
                         "fid": 230,
                         "minute": minutes,
-                        "note": `Issue ${issueId} - ${workLog.comment.content[0].content[0].text}`,
+                        "note": notes,
                         "locId": null,
                         "billable": true,
                         "onSite": false,
@@ -96,6 +98,19 @@ function logTimetoKronos (userData) {
             if(data.statusCode === 320) {
                 alert(`This particular date ${logDetails.time[0].date}  is locked in kronos. Please add time log manually in kronos.`)
                 return false;
+            } else {
+                chrome.storage.sync.get({
+                    loggedTaskList: ''
+                }, function (items) {
+                    var parsedTime = [];
+                    if(items.loggedTaskList !== "") {
+                        parsedTime = JSON.parse(items.loggedTaskList);
+                    }
+                    parsedTime.push(logDetails.time[0]);
+                    chrome.storage.sync.set({
+                        loggedTaskList: JSON.stringify(parsedTime)
+                    });
+                });
             }
         },
         error: function (jqXHR)
