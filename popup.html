@@ -12,19 +12,16 @@
 </head>
 
 <body>
-  <div class="container">
-    <h1 class="mt-0"> Login to Kronos</h1>
-    <hr>
-      <div id="loggedMsg" style="display: none;">
-        <div class="alert alert-success">
-          <img src="./images/ok.png" alt=""> &nbsp; You have already logged in.
-        </div>
-        <button id="editDetails" class="btn" >Edit Email/Password</button>
-      </div>
+  <div class="header">
+    <h1>Jira to Kronos Logs</h1>
+    <button class="loginButton" id="editDetails">Edit login details</button>
+  </div>
+  <div class="container" id="login">
+      <h2 class="LoginHeading"> Login to Kronos</h2>
       <div id="loggedErr" class="alert alert-error mb-15" style="display: none;">
         <img src="./images/cross.png" alt=""> &nbsp; Invalid Email Address or password.
       </div>
-       <div id="login">
+       <div>
         <div class="form-group">
           <label for="email"><b>Email Address</b></label>
           <input class="form-control" type="email" placeholder="Enter Email" name="email" id="email" required>
@@ -40,6 +37,94 @@
         <span id="status"></span>
        </div> 
   </div>
+
+  <div id="loggedMsg" class="logsDetails">
+
+    <div class="todayLogStatus">
+      <h2>Today's total logged time is <b>5H 30M</b></h2>
+      <button class="addNewTask" id="addNewTaskBtn">ADD</button>
+    </div>
+
+    <div class="logTblouter">
+      <table class="logTbl" border="0" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr>
+            <th width="100px">Jira id</th>
+            <th width="200px">Task</th>
+            <th width="80px">Time</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>SB-16743</td>
+            <td>
+              <select name="task1" id="task1">
+                <option value="">Select task</option>
+              </select>
+            </td>
+            <td>
+              3H 30M
+            </td>
+            <td>
+              Details of task
+            </td>
+          </tr>
+          <tr>
+            <td>SB-16743</td>
+            <td>
+              <select name="task1" id="task1">
+                <option value="">Select task</option>
+              </select>
+            </td>
+            <td>
+              3H 30M
+            </td>
+            <td>
+              Details of task
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="addTaskSec" id="addTaskSec" style="display: none;">
+    <div class="innerFrm">
+      <div class="field-wrapper">
+				<div class="field-lbl"> Task Name </div>
+				<div class="field">
+					<select name="project" id="tasks">
+						<option value="">Tasks</option>
+					</select>
+				</div>
+			</div>
+      <div class="field-wrapper">
+				<div class="field-lbl"> Time </div>
+				<div class="field">
+					<select name="nTHours" id="nTHours" class="halfSelectbox">
+						<option value="">Hours</option>
+          </select>
+          <select name="nTMinutes" id="nTMinutes"  class="halfSelectbox">
+						<option value="">Hours</option>
+					</select>
+				</div>
+      </div>
+      <div class="field-wrapper">
+				<div class="field-lbl"> Details </div>
+				<div class="field">
+					<textarea name="details" id="details" class="form-control" cols="30" rows="10"></textarea>
+				</div>
+			</div>
+      
+      <div style="text-align: center;">
+        <button class="saveBtn">Save</button>
+        <button class="cancelBtn" id="cancelFrmBtn">Cancel</button>
+      </div>
+    </div> 
+  </div>
+
   <script src="./js/parser.js">
   </script>
 </body>

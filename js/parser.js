@@ -80,9 +80,11 @@ function restoreOptions() {
         if(items.email != '' && items.password != '') {
             $("#loggedMsg").show();
             $("#login").hide();
+            $("#editDetails").show();
         } else {
             $("#loggedMsg").hide();
             $("#login").show();
+            $("#editDetails").hide();
         }
     });
 }
@@ -90,6 +92,18 @@ function restoreOptions() {
 function toogleBlock() {
     $("#loggedMsg,#login").toggle();
 }
+
+$(document).ready(function(){
+    $("#addNewTaskBtn").on('click', function(){
+        $("#loggedMsg").hide();
+        $("#addTaskSec").show();
+    })
+
+    $("#cancelFrmBtn").on('click', function(){
+        $("#loggedMsg").show();
+        $("#addTaskSec").hide();
+    })
+})
 
 document.addEventListener('DOMContentLoaded', restoreOptions);
 document.getElementById('save').addEventListener('click', saveOptions);
