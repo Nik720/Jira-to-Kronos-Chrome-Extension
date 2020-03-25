@@ -1,16 +1,17 @@
 
 var logDetails = '';
+var currentIssueId = '';
 console.log("content script")
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if(request.evtName === 'logToKronos') {
         const workLog = JSON.parse(request.efforts);
         const minutes = getHoursToMinutes(workLog.timeSpent);
-        const issueId = request.url.split('issue/')[1].split('/worklog')[0];
+        currentIssueId = request.url.split('issue/')[1].split('/worklog')[0];
         chrome.storage.sync.get({
             project: '',
             task: '',
         }, function (items) {
-            const notes = (workLog.comment.content[0].content.length > 0) ? `Issue ${issueId} - ${workLog.comment.content[0].content[0].text}` : `Issue ${issueId} ` ; 
+            const notes = (workLog.comment.content[0].content.length > 0) ? `Issue ${currentIssueId} - ${workLog.comment.content[0].content[0].text}` : `Issue ${currentIssueId} ` ; 
             logDetails = {
                 "time": [
                     {
@@ -102,11 +103,15 @@ function logTimetoKronos (userData) {
                 chrome.storage.sync.get({
                     loggedTaskList: ''
                 }, function (items) {
-                    var parsedTime = [];
+                    var parsedTime = {
+                        currentDate: getCurrentDate(new Date()),
+                        list: []
+                    };
                     if(items.loggedTaskList !== "") {
-                        parsedTime = JSON.parse(items.loggedTaskList);
+                        parsedTime = JSON.parse(items.loggedTaskList)
                     }
-                    parsedTime.push(logDetails.time[0]);
+                    logDetails.time[0].issueId = currentIssueId
+                    parsedTime.list.push(logDetails.time[0]);
                     chrome.storage.sync.set({
                         loggedTaskList: JSON.stringify(parsedTime)
                     });

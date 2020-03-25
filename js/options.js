@@ -15,16 +15,20 @@
             const taskList = projectMetaData.projectTaskMap.filter((item) => {
                 return item.projectId == selectedProject
             });
-            const taskArrayIds = taskList[0].taskList;
-            var taskOptions = "<option value=''>Select Task</option>";
-            taskOptionList = [];
-            projectMetaData.taskList.forEach(task => {
-                if(taskArrayIds.includes(task.id)) {
-                    taskOptions += `<option value="${task.id}" >${task.name}</option>`;
-                    taskOptionList.push(task);
-                }
+            chrome.storage.sync.get({
+                task: '',
+            }, async function(items) {
+                const taskArrayIds = taskList[0].taskList;
+                var taskOptions = "<option value=''>Select Task</option>";
+                taskOptionList = [];
+                projectMetaData.taskList.forEach(task => {
+                    if(taskArrayIds.includes(task.id)) {
+                        taskOptions += `<option value="${task.id}" ${(items.task && items.task == task.id) ? 'selected' : ''}>${task.name}</option>`;
+                        taskOptionList.push(task);
+                    }
+                });
+                $("#tasks").html(taskOptions);
             });
-            $("#tasks").html(taskOptions);
         }); 
     });
 
@@ -34,6 +38,7 @@
             email: '',
             password: '',
             authToken: '',
+            project: '',
         }, async function(items) {
             let authToken = items.authToken
             $.ajax({
@@ -51,12 +56,10 @@
                         projectMetaData = resData;
                         var projectOptions = "<option value=''>Select Projecrt</option>";
                         resData.projectList.forEach(project => {
-                            projectOptions += `<option value="${project.projectCode}" >${project.name}</option>`;
-                        });
-                        resData.taskList.forEach(task => {
-                            
+                            projectOptions += `<option value="${project.projectCode}">${project.name}</option>`;
                         });
                         $("#projects").html(projectOptions);
+                        $("#projects").val(items.project).change();
                         $('.loader').hide();
                     }
                 },
@@ -87,7 +90,7 @@
     }
 
     function restoreOptions() {
-
+    
     }
     
 })(); 

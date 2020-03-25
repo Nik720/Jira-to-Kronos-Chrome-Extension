@@ -84,33 +84,67 @@ function restoreOptions() {
             $("#loggedMsg").show();
             $("#login").hide();
             $("#editDetails").show();
-
+            if(items.taskList !== "") {
+                const tList = JSON.parse(items.taskList);
+                taskList = tList;
+            }
             if(items.loggedTaskList !== "") {
-                console.log(items.loggedTaskList);
                 prepareTaskTable(items.loggedTaskList)
             }
-
         } else {
             $("#loggedMsg").hide();
             $("#login").show();
             $("#editDetails").hide();
-        }
-        if(items.taskList !== "") {
-            const tList = JSON.parse(items.taskList);
-            var taskOptions = "<option value=''>Select Task</option>";
-            tList.forEach(task => {
-                taskOptions += `<option value="${task.id}" >${task.name}</option>`;
-            });
-            taskList = taskOptions;
         }
     });
 }
 
 function prepareTaskTable(loggedList) {
     const loggedListJson = JSON.parse(loggedList);
-    loggedListJson.forEach(list => {
-        console.log(list)
+
+    if(loggedListJson.currentDate === getCurrentDate(new Date())) {
+        var trLog = ""
+        var totalLoggedTimes = 0;
+        loggedListJson.list.forEach(list => {
+            trLog += `<tr>`;
+            trLog += `<td>${(list.issueId) ? list.issueId : '-'}</td>`;
+            trLog += `<td><select id="taskList${list.tid}" class="taskLists" data-logRef="${list.activityRefNumber}">${getTaskOptions(list.tid)}</select></td>`;
+            trLog += `<td>${minutesToHHMM(list.minute)}</td>`;
+            trLog += `<td>${list.note}</td>`;
+            trLog += `</tr>`;
+            totalLoggedTimes = parseInt(totalLoggedTimes) + parseInt(list.minute)
+        });
+        $("#logTbl").find('tbody').html(trLog);
+        $('#totalLoggedTime').html(minutesToHHMM(totalLoggedTimes));
+    } else {
+        $("#logTbl").find('tbody').html('');
+        $('#totalLoggedTime').html('0H 0M');
+    }
+}
+
+function getTaskOptions(selectedTask) {
+    console.log(selectedTask)
+    var taskOptions = "<option value=''>Select Task</option>";
+    taskList.forEach(task => {
+        taskOptions += `<option value="${task.id}" ${task.id == selectedTask ? 'selected' : ''}>${task.name}</option>`;
     });
+    return taskOptions;
+}
+
+function minutesToHHMM(minutes) {
+    let hours = Math.floor(minutes / 60);  
+    let min = minutes % 60;
+    return `${hours}H ${min}M`;
+}
+
+function getCurrentDate(date) {
+    var d = new Date(date);
+    var month = d.getMonth()+1;
+    var day = d.getDate();
+    var output = d.getFullYear() + '-' +
+        ((''+month).length<2 ? '0' : '') + month + '-' +
+        ((''+day).length<2 ? '0' : '') + day;
+    return output;
 }
 
 function toogleBlock() {
