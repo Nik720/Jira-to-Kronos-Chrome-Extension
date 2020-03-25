@@ -1,5 +1,4 @@
 var taskList;
-// Saves options to chrome.storage
 function saveOptions() {
     var email = $("#email").val();
     var password = $("#password").val();
@@ -68,10 +67,7 @@ async function IsEmail(email) {
     }
 }
 
-// Restores select box and checkbox state using the preferences
-// stored in chrome.storage.
 function restoreOptions() {
-    // Use default values
     chrome.storage.sync.get({
         email: '',
         password: '',
@@ -101,7 +97,6 @@ function restoreOptions() {
 
 function prepareTaskTable(loggedList) {
     const loggedListJson = JSON.parse(loggedList);
-
     if(loggedListJson.currentDate === getCurrentDate(new Date())) {
         var trLog = ""
         var totalLoggedTimes = 0;
@@ -137,16 +132,6 @@ function minutesToHHMM(minutes) {
     return `${hours}H ${min}M`;
 }
 
-function getCurrentDate(date) {
-    var d = new Date(date);
-    var month = d.getMonth()+1;
-    var day = d.getDate();
-    var output = d.getFullYear() + '-' +
-        ((''+month).length<2 ? '0' : '') + month + '-' +
-        ((''+day).length<2 ? '0' : '') + day;
-    return output;
-}
-
 function toogleBlock() {
     $("#loggedMsg,#login").toggle();
 }
@@ -155,8 +140,22 @@ $(document).ready(function(){
     $("#addNewTaskBtn").on('click', function(){
         $("#loggedMsg").hide();
         $("#addTaskSec").show();
-        $("#newTasks").html(taskList);
-    })
+        chrome.storage.sync.get({
+            task: ''
+        }, function (items) {
+            $("#newTasks").html(getTaskOptions(items.task));
+            var hoursOptions = `<option value=''>Select hours</option>`;
+            for (let i = 1; i <= 12; i++) {;
+                hoursOptions += `<option value='${i}h'>${i}</option>`;
+            }
+            $("#nTHours").html(hoursOptions);
+            var minutesOptions = `<option value=''>Select minutes</option>`;
+            for (let i = 1; i <= 60; i++) {;
+                minutesOptions += `<option value='${i}m'>${i}</option>`;
+            }
+            $("#nTMinutes").html(minutesOptions);
+        });
+    });
 
     $("#cancelFrmBtn").on('click', function(){
         $("#loggedMsg").show();
