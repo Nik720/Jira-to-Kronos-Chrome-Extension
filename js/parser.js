@@ -84,9 +84,11 @@ function restoreOptions() {
                 const tList = JSON.parse(items.taskList);
                 taskList = tList;
             }
+            $('#totalLoggedTime').html('0H 0M');
             if(items.loggedTaskList !== "") {
                 prepareTaskTable(items.loggedTaskList)
             }
+
         } else {
             $("#loggedMsg").hide();
             $("#login").show();
@@ -113,7 +115,6 @@ function prepareTaskTable(loggedList) {
         $('#totalLoggedTime').html(minutesToHHMM(totalLoggedTimes));
     } else {
         $("#logTbl").find('tbody').html('');
-        $('#totalLoggedTime').html('0H 0M');
     }
 }
 
