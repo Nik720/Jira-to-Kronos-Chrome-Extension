@@ -23,7 +23,7 @@ chrome.webRequest.onBeforeRequest.addListener((details) => {
             }
             chrome.tabs.query({active: true, currentWindow: true},function(tabs) {
                 chrome.tabs.sendMessage(tabs[0].id, requestMessage);
-            }); 
+            });
         }
     }
 }, networkFilters, extraInfoSpec);

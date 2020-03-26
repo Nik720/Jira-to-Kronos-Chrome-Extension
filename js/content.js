@@ -1,6 +1,7 @@
 
 var logDetails = '';
 var currentIssueId = '';
+var isManuallyAdded = false;
 console.log("content script")
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if(request.evtName === 'logToKronos') {
@@ -99,7 +100,7 @@ function logTimetoKronos (userData) {
             if(data.statusCode === 320) {
                 alert(`This particular date ${logDetails.time[0].date}  is locked in kronos. Please add time log manually in kronos.`)
                 return false;
-            } else {
+            } else if(data.statusCode === 200) {
                 chrome.storage.sync.get({
                     loggedTaskList: ''
                 }, function (items) {
@@ -108,12 +109,20 @@ function logTimetoKronos (userData) {
                         list: []
                     };
                     if(items.loggedTaskList !== "") {
-                        parsedTime = JSON.parse(items.loggedTaskList)
+                        const loggedTask = JSON.parse(items.loggedTaskList)
+                        parsedTime = (loggedTask.currentDate === getCurrentDate(new Date())) ? loggedTask : parsedTime
                     }
                     logDetails.time[0].issueId = currentIssueId
                     parsedTime.list.push(logDetails.time[0]);
                     chrome.storage.sync.set({
                         loggedTaskList: JSON.stringify(parsedTime)
+                    }, function(){
+                        if(isManuallyAdded) {
+                            alert("Manual time log added to kronos.")
+                            $("#cancelFrmBtn").click();
+                            restoreOptions();
+                            isManuallyAdded = false;
+                        }
                     });
                 });
             }

@@ -140,28 +140,69 @@ $(document).ready(function(){
     $("#addNewTaskBtn").on('click', function(){
         $("#loggedMsg").hide();
         $("#addTaskSec").show();
+        resetNewTaskForm();
         chrome.storage.sync.get({
             task: ''
         }, function (items) {
             $("#newTasks").html(getTaskOptions(items.task));
             var hoursOptions = `<option value=''>Select hours</option>`;
-            for (let i = 1; i <= 12; i++) {;
+            for (let i = 1; i <= 12; i++) {
                 hoursOptions += `<option value='${i}h'>${i}</option>`;
             }
             $("#nTHours").html(hoursOptions);
             var minutesOptions = `<option value=''>Select minutes</option>`;
-            for (let i = 1; i <= 60; i++) {;
+            for (let i = 0; i < 60; i++) {
                 minutesOptions += `<option value='${i}m'>${i}</option>`;
             }
             $("#nTMinutes").html(minutesOptions);
         });
     });
 
+    $("#saveNewTask").on('click', function(){
+        let task = $("#newTasks").val();
+        let hours = $("#nTHours").val();
+        let minutes = $("#nTMinutes").val();
+        let details = $("#details").val();
+        if(task !== "" && hours !== "" && minutes !== "" && details !== "") {
+            chrome.storage.sync.get({
+                project: '',
+            }, function (items) {
+                logDetails = {
+                    "time": [
+                        {
+                            "date": getCurrentDate(new Date()),
+                            "pid": items.project !== '' ? items.project : 1241,
+                            "tid": task,
+                            "fid": 230,
+                            "minute": getHoursToMinutes(`${hours} ${minutes}`),
+                            "note": details,
+                            "locId": null,
+                            "billable": true,
+                            "onSite": false,
+                            "activityRefNumber": uuidv4()
+                        }
+                    ]
+                }
+                isManuallyAdded = true;
+                getAuthToken();
+            });
+        } else {
+            alert("Please fill all the require fields");
+        }
+    })
+
     $("#cancelFrmBtn").on('click', function(){
         $("#loggedMsg").show();
         $("#addTaskSec").hide();
     })
 })
+
+function resetNewTaskForm() {
+    $("#newTasks").val('');
+    $("#nTHours").val('');
+    $("#nTMinutes").val('');
+    $("#details").val('');
+}
 
 document.addEventListener('DOMContentLoaded', restoreOptions);
 document.getElementById('save').addEventListener('click', saveOptions);
