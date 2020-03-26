@@ -68,6 +68,7 @@ async function IsEmail(email) {
 }
 
 function restoreOptions() {
+    $("#loader").show();
     chrome.storage.sync.get({
         email: '',
         password: '',
@@ -95,6 +96,8 @@ function restoreOptions() {
             $("#editDetails").hide();
         }
     });
+
+    $("#loader").hide();
 }
 
 function prepareTaskTable(loggedList) {
@@ -105,17 +108,32 @@ function prepareTaskTable(loggedList) {
         loggedListJson.list.forEach(list => {
             trLog += `<tr>`;
             trLog += `<td>${(list.issueId) ? list.issueId : '-'}</td>`;
-            trLog += `<td><select id="taskList${list.tid}" class="taskLists" data-logRef="${list.activityRefNumber}">${getTaskOptions(list.tid)}</select></td>`;
+            trLog += `<td><select id="taskList${list.tid}" class="taskLists" data-loggedTask='${JSON.stringify(list)}'>${getTaskOptions(list.tid)}</select></td>`;
             trLog += `<td>${minutesToHHMM(list.minute)}</td>`;
             trLog += `<td>${list.note}</td>`;
+            trLog += `<td><button type="button" data-activityRefno="${list.activityRefNumber}" class="deleteLog">Delete</button></td>`;
             trLog += `</tr>`;
             totalLoggedTimes = parseInt(totalLoggedTimes) + parseInt(list.minute)
         });
         $("#logTbl").find('tbody').html(trLog);
         $('#totalLoggedTime').html(minutesToHHMM(totalLoggedTimes));
+        $(".deleteLog").on('click', function() {
+            let activityRefno = $(this).attr('data-activityRefno');
+            $("#loader").show();
+            deleteLogfromKronos(activityRefno);
+        })
+        
+        $(".taskLists").on('change', function() {
+            let oldLoggedTask = $(this).attr('data-loggedTask');
+            let newTaskid = $(this).val();
+            $("#loader").show();
+            updateTask(oldLoggedTask, newTaskid);
+        })
+        
     } else {
         $("#logTbl").find('tbody').html('');
     }
+    $("#loader").hide();
 }
 
 function getTaskOptions(selectedTask) {
@@ -165,6 +183,7 @@ $(document).ready(function(){
         let minutes = $("#nTMinutes").val();
         let details = $("#details").val();
         if(task !== "" && hours !== "" && minutes !== "" && details !== "") {
+            $("#loader").show();
             chrome.storage.sync.get({
                 project: '',
             }, function (items) {
@@ -196,6 +215,7 @@ $(document).ready(function(){
         $("#loggedMsg").show();
         $("#addTaskSec").hide();
     })
+
 })
 
 function resetNewTaskForm() {
@@ -203,6 +223,7 @@ function resetNewTaskForm() {
     $("#nTHours").val('');
     $("#nTMinutes").val('');
     $("#details").val('');
+    $("#loader").hide();
 }
 
 document.addEventListener('DOMContentLoaded', restoreOptions);

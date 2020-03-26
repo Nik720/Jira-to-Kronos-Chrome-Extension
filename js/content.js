@@ -155,7 +155,11 @@ function getAuthToken( ) {
                 success: function(data, textStatus, jqXHR)
                 {
                     if(data.statusCode == 200) {
-                        logTimetoKronos(data.responseData);
+                        chrome.storage.sync.set({
+                            authToken: data.responseData.sessionId
+                        }, function(){
+                            logTimetoKronos(data.responseData);
+                        });
                     } else if(data.statusCode == 400) {
                         alert("Invalid Kronos credentials. Please try again.");
                         return false;
@@ -170,6 +174,106 @@ function getAuthToken( ) {
             alert("Please sign to kronos using plugin.")
             return false;
         }
+    });
+    
+}
+
+function deleteLogfromKronos(activityRefNumber) {
+    chrome.storage.sync.get({
+        authToken: '',
+    }, function (items) {
+        let authToken = items.authToken
+        $.ajax({
+            url : "https://kronos.idc.tarento.com/api/v1/user/deleteTask",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data : JSON.stringify({"activityRefNumber":[activityRefNumber]}),
+            dataType: 'json',
+            headers: {
+                "Authorization": authToken
+            },
+            success: function(data)
+            {
+                 if(data.statusCode === 200) {
+                    chrome.storage.sync.get({
+                        loggedTaskList: ''
+                    }, function (items) {
+                        if(items.loggedTaskList !== "") {
+                            const loggedTask = JSON.parse(items.loggedTaskList)
+                            const newLoggedTaskList = loggedTask.list.filter((task) => {
+                                return task.activityRefNumber !== activityRefNumber
+                            });
+                            loggedTask.list = newLoggedTaskList;
+                            chrome.storage.sync.set({
+                                loggedTaskList: JSON.stringify(loggedTask)
+                            }, function(){
+                                alert("Log deleted from kronos.")
+                                restoreOptions();
+                            });
+                        }
+                    });
+                }
+            },
+            error: function (jqXHR)
+            {
+                console("error while adding logs to kronos. ",jqXHR);
+            }
+        });
+    });
+    
+}
+
+function updateTask(tdetails, newTaskid) {
+    chrome.storage.sync.get({
+        authToken: '',
+    }, function (items) {
+        let authToken = items.authToken
+        let oldTask = JSON.parse(tdetails);
+        oldTask.tid = newTaskid;
+        delete oldTask.issueId;
+        $.ajax({
+            url : "https://kronos.idc.tarento.com/api/v1/user/updateTaskTimeForProjectFeature",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data : JSON.stringify({'time': [oldTask]}),
+            dataType: 'json',
+            headers: {
+                "Authorization": authToken
+            },
+            success: function(data)
+            {
+                if(data.statusCode === 200) {
+                    chrome.storage.sync.get({
+                        loggedTaskList: ''
+                    }, function (items) {
+                        if(items.loggedTaskList !== "") {
+                            const loggedTask = JSON.parse(items.loggedTaskList)
+                            const newLoggedTaskList = []
+                            loggedTask.list.map((task) => {
+                                if(task.activityRefNumber === oldTask.activityRefNumber) {
+                                    task.tid = newTaskid;
+                                }
+                                newLoggedTaskList.push(task);
+                            }); 
+                            loggedTask.list = newLoggedTaskList;
+                            chrome.storage.sync.set({
+                                loggedTaskList: JSON.stringify(loggedTask)
+                            }, function(){
+                                alert("Task updated in kronos.")
+                                restoreOptions();
+                            });
+                        }
+                    });
+                } else {
+                    alert(data.statusMessage);
+                    restoreOptions();
+                }
+            },
+            error: function (jqXHR)
+            {
+                console("error while adding logs to kronos. ",jqXHR);
+            }
+        });
     });
     
 }
