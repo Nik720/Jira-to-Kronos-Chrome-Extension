@@ -89,11 +89,11 @@ function restoreOptions() {
             if(items.loggedTaskList !== "") {
                 prepareTaskTable(items.loggedTaskList)
             }
-
+            $("#editDetails").show();
+            $("#logList").hide();
         } else {
-            $("#loggedMsg").hide();
-            $("#login").show();
-            $("#editDetails").hide();
+            toogleBlock();
+            $("#logList").hide();
         }
     });
 
@@ -152,7 +152,11 @@ function minutesToHHMM(minutes) {
 }
 
 function toogleBlock() {
-    $("#loggedMsg,#login").toggle();
+    $("#login").show();
+    $("#addTaskSec").hide();
+    $("#loggedMsg").hide();
+    $("#editDetails").hide();
+    $("#logList").show();
 }
 
 $(document).ready(function(){
@@ -214,6 +218,13 @@ $(document).ready(function(){
     $("#cancelFrmBtn").on('click', function(){
         $("#loggedMsg").show();
         $("#addTaskSec").hide();
+    })
+
+    $("#logList").on('click', function(){
+        $("#login").hide();
+        $("#logList").hide();
+        $("#loggedMsg").show();
+        $("#editDetails").show();
     })
 
 })
