@@ -312,3 +312,11 @@ body {
   border: 1px solid #e13125;
   color: #fff;
 }
+
+.errStatus{
+  padding: 10px;
+  color: #fff;
+  margin-bottom: 10px;
+  background-color: #dc5151;
+  display: none;
+}

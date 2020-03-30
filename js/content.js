@@ -118,7 +118,6 @@ function logTimetoKronos (userData) {
                         loggedTaskList: JSON.stringify(parsedTime)
                     }, function(){
                         if(isManuallyAdded) {
-                            alert("Manual time log added to kronos.")
                             $("#cancelFrmBtn").click();
                             restoreOptions();
                             isManuallyAdded = false;
@@ -178,51 +177,6 @@ function getAuthToken( ) {
     
 }
 
-function deleteLogfromKronos(activityRefNumber) {
-    chrome.storage.sync.get({
-        authToken: '',
-    }, function (items) {
-        let authToken = items.authToken
-        $.ajax({
-            url : "https://kronos.idc.tarento.com/api/v1/user/deleteTask",
-            type: "POST",
-            contentType: 'application/json; charset=utf-8',
-            data : JSON.stringify({"activityRefNumber":[activityRefNumber]}),
-            dataType: 'json',
-            headers: {
-                "Authorization": authToken
-            },
-            success: function(data)
-            {
-                 if(data.statusCode === 200) {
-                    chrome.storage.sync.get({
-                        loggedTaskList: ''
-                    }, function (items) {
-                        if(items.loggedTaskList !== "") {
-                            const loggedTask = JSON.parse(items.loggedTaskList)
-                            const newLoggedTaskList = loggedTask.list.filter((task) => {
-                                return task.activityRefNumber !== activityRefNumber
-                            });
-                            loggedTask.list = newLoggedTaskList;
-                            chrome.storage.sync.set({
-                                loggedTaskList: JSON.stringify(loggedTask)
-                            }, function(){
-                                alert("Log deleted from kronos.")
-                                restoreOptions();
-                            });
-                        }
-                    });
-                }
-            },
-            error: function (jqXHR)
-            {
-                console("error while adding logs to kronos. ",jqXHR);
-            }
-        });
-    });
-    
-}
-
 function updateTask(tdetails, newTaskid) {
     chrome.storage.sync.get({
         authToken: '',
@@ -259,13 +213,20 @@ function updateTask(tdetails, newTaskid) {
                             chrome.storage.sync.set({
                                 loggedTaskList: JSON.stringify(loggedTask)
                             }, function(){
-                                alert("Task updated in kronos.")
+                                $("#sucessMsg").html("Task updated in kronos.").show();
+                                setTimeout(() => {
+                                    $("#sucessMsg").html("").hide();
+                                }, 3000);
                                 restoreOptions();
                             });
                         }
                     });
                 } else {
                     alert(data.statusMessage);
+                    $("#commonErrMsg").html(data.statusMessage).show();
+                    setTimeout(() => {
+                        $("#commonErrMsg").html("").hide();
+                    }, 3000);
                     restoreOptions();
                 }
             },

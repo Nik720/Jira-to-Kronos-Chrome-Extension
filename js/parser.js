@@ -29,7 +29,7 @@ function saveOptions() {
                 $("#loggedErr").show();
                 setTimeout(function () {
                     $("#loggedErr").hide();
-                }, 1000);
+                }, 3000);
                 return false;
             }
         }
@@ -111,17 +111,11 @@ function prepareTaskTable(loggedList) {
             trLog += `<td><select id="taskList${list.tid}" class="taskLists" data-loggedTask='${JSON.stringify(list)}'>${getTaskOptions(list.tid)}</select></td>`;
             trLog += `<td>${minutesToHHMM(list.minute)}</td>`;
             trLog += `<td>${list.note}</td>`;
-            trLog += `<td><button type="button" data-activityRefno="${list.activityRefNumber}" class="deleteLog">Delete</button></td>`;
             trLog += `</tr>`;
             totalLoggedTimes = parseInt(totalLoggedTimes) + parseInt(list.minute)
         });
         $("#logTbl").find('tbody').html(trLog);
         $('#totalLoggedTime').html(minutesToHHMM(totalLoggedTimes));
-        $(".deleteLog").on('click', function() {
-            let activityRefno = $(this).attr('data-activityRefno');
-            $("#loader").show();
-            deleteLogfromKronos(activityRefno);
-        })
         
         $(".taskLists").on('change', function() {
             let oldLoggedTask = $(this).attr('data-loggedTask');
@@ -211,7 +205,10 @@ $(document).ready(function(){
                 getAuthToken();
             });
         } else {
-            alert("Please fill all the require fields");
+            $("#errStatus").html("Please fill all the require field").show();
+            setTimeout(() => {
+                $("#errStatus").html("").hide();
+            }, 3000);
         }
     })
 
