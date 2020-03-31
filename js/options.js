@@ -7,7 +7,8 @@
             password: '',
             authToken: '',
         }, function(items) {
-            fetchAllprojectDetails(items)
+            fetchAllprojectDetails(items);
+            getJiraComponents();
         });
 
         $("#projects").on('change', function(e){
@@ -56,7 +57,7 @@
                     if(data.statusCode === 200) {
                         const resData = data.responseData;
                         projectMetaData = resData;
-                        var projectOptions = "<option value=''>Select Projecrt</option>";
+                        var projectOptions = "<option value=''>Select Project</option>";
                         resData.projectList.forEach(project => {
                             projectOptions += `<option value="${project.projectCode}">${project.name}</option>`;
                         });
@@ -70,6 +71,21 @@
                     console.log("error while adding logs to kronos. ",jqXHR);
                 }
             });
+        });
+    }
+
+    function getJiraComponents() {
+        $.ajax({
+            url : "https://project-sunbird.atlassian.net/rest/api/2/project/10000/components",
+            type: "GET",
+            success: function(data)
+            {
+                console.log(data)
+            },
+            error: function (jqXHR)
+            {
+                console.log("error while adding logs to kronos. ",jqXHR);
+            }
         });
     }
 
