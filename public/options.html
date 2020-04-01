@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Jira Log Time Options</title>
+	<style>
+		body { 
+			padding: 0;
+			margin: 0;
+			background: #efefef;
+		}
+		#status {
+			/*padding: 10px 0;*/
+			height: 20px;
+			font-size: 11px;
+			font-weight: bold;
+			color: #666;
+			text-align: right;
+		}
+		.btn {
+			width: 100px;
+			text-shadow: none;
+			border: none;
+			border-radius: 2px;
+			padding: 8px;
+			font-size: 15px;
+			text-transform: uppercase;
+			cursor: pointer;
+			background: #689F39;
+			color: #fff;
+			box-shadow: 1px 1px 3px #00000054;
+			border: 1px solid #5b902d;		
+		}
+		.loader {
+			position: fixed;
+			top: 0px;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(102, 102, 102, 0.29);
+		}
+		.formWrapper {
+			width: 30%;
+			margin: 10% auto;
+			background-color: #ffffff;
+			box-shadow: 1px 1px 3px #0000007d;
+			border-radius: 5px;
+		}
+		.formBody{
+			padding: 15px;
+			width: 100%;
+		}
+		.field-wrapper {
+			width: 100%;
+    		margin-bottom: 10px;
+		}
+		.field-lbl {
+			font-weight: 500;
+			display: inline-block;
+			width: 150px;
+		}
+		.field {
+			display: inline-block;
+    		width: 315px;
+		}
+		.field select {
+			width: 100%;
+			height: 35px;
+			font-size: 13px;
+		}
+		.heading {
+			text-align: center;
+			margin: 0px;
+			font-size: 18px;
+			font-weight: 500;
+			color: #333333;
+			padding: 15px;
+			border-bottom: 1px solid #a5a5a5;
+		}
+	</style>
+</head>
+<body>
+	<div class="formWrapper">
+		<h2 class="heading">Kronos project and task details</h2>
+		<div class="formBody">
+			<div class="field-wrapper">
+				<div class="field-lbl">
+					Project name
+				</div>
+				<div class="field">
+					<select name="project" id="projects">
+						<option value="1">Projects</option>
+					</select>
+				</div>
+			</div>
+			<div class="field-wrapper">
+				<div class="field-lbl">
+					Task Name
+				</div>
+				<div class="field" style="text-align: center">
+					<select name="project" id="tasks">
+						<option value="">Tasks</option>
+					</select>
+				</div>
+			</div>
+			<div class="field-wrapper" style="text-align: center;">
+				<button id="save" class="btn">Save</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="loader">Loading...</div>
+
+	<script src="js/vendor.js"></script>
+	<script src="js/options.js"></script>
+
+</body>
+</html>
