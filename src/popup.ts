@@ -34,21 +34,31 @@ $(function() {
     const prepareTaskTable = async(loggedList:any) => {
         const loggedListJson = JSON.parse(loggedList);
         if(loggedListJson.currentDate === moment().format('YYYY-MM-DD')) {
-            $("#logTbl").find('tbody').html('');
+            $("#taskCards").html('');
             var totalLoggedTimes:number = 0;
             loggedListJson.list.forEach(async list => {
-                const optionList = await _helper.setTaskOptionList(list.pid, list.tid);
-                let trLog = `<tr>`;
-                trLog += `<td>${(list.issueId) ? list.issueId : '-'}</td>`;
-                trLog += `<td><select id="taskList${list.tid}" class="taskLists" data-loggedTask='${JSON.stringify(list)}'>
-                            ${optionList}
-                            </select>
-                            </td>`;
-                trLog += `<td>${await _helper.minutesToHHMM(list.minute)}</td>`;
-                trLog += `<td>${list.note}</td>`;
-                trLog += `</tr>`;
+
+                const projectName = _helper.projectMetaData.projectList.find(project => {
+                    return project.projectCode === list.pid;
+                });
+                const taskName = _helper.projectMetaData.taskList.find(task => {
+                    return task.id == list.tid;
+                });
+                let taskcard = `<div class="taskCard">
+                                    <div class="taskSection">
+                                    <p class="taskName">${taskName.name}</p>
+                                    <div class="projectName">${projectName.name}</div>
+                                    </div>
+                                    <div class="projectTimeSection">
+                                    <p class="ticketId" style="display:${(list.issueId) ? 'block' : 'none'}">${(list.issueId) ? list.issueId : '-'}</p>
+                                    <div class="loggedTime">${await _helper.minutesToHHMM(list.minute)}</div>
+                                    <button class="editBtn">Edit</button>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>`;
+
                 totalLoggedTimes += parseInt(list.minute);
-                $("#logTbl").find('tbody').append(trLog);
+                $("#taskCards").append(taskcard);
                 $('#totalLoggedTime').html(await _helper.minutesToHHMM(totalLoggedTimes));
             });
             

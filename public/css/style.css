@@ -5,7 +5,7 @@
 body {
     font-family: "Open Sans", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
-    min-width: 400px;
+    min-width: 320px;
     max-width: 700px;
     margin: 0;
     font-size: 13px;
@@ -164,16 +164,18 @@ body {
   }
 
   .logsDetails {
-    width: 650px;
+    width: 100%;
     min-height: 100px;
     padding: 15px;
   }
 
-
+.todayLogStatus {
+  position: relative;
+}
 .todayLogStatus h2{
   margin: 0;
   display: inline-block;
-  font-size: 15px;
+  font-size: 13px;
   color: #4e4e4e;
 }
 .todayLogStatus h2 b{
@@ -182,19 +184,73 @@ body {
 }
 
 .todayLogStatus .addNewTask {
-  float: right;
-  font-size: 12px;
+  font-size: 11px;
   background-color: #09579a;
-  padding: 7px 15px;
+  padding: 4px 10px;
   font-weight: 600;
   border-color: #0f5490;
   color: #fff;
   border-radius: 26px;
   box-shadow: 0px 3px 3px #0000008a;
   cursor: pointer;
+  position: absolute;
+  right: -2px;
+  top: -2px;
 }
 .logTblouter {
-  padding-top: 20px;
+  margin-top: 10px;
+  max-height: 300px;
+    overflow: auto;
+}
+.logTblouter .taskCard {
+  box-shadow: 1px 3px 5px #0000001a;
+    background-color: #f3f2f2;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.taskCard .taskSection {
+  width: 190px;
+  float: left;
+}
+.ticketId {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #656565;
+  margin-bottom: 3px;
+}
+.taskSection .taskName {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+.projectTimeSection {
+  width: 69px;
+  float: left;
+  padding: 5px; 
+}
+.projectName {
+  font-size: 13px;
+  color: #3c55a0;
+  font-weight: 600;
+  margin-top: 5px;
+}
+.loggedTime {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f8c25;
+  text-transform: uppercase;
+}
+.editBtn {
+  margin-top: 5px;
+  background-color: #717171;
+  color: #fff;
+  border-color: #616263;
+  border-radius: 50px;
+  cursor: pointer;
+}
+.clear {
+  clear: both;
 }
 .logTblouter .logTbl{
   width: 100%;
