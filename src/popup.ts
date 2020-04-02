@@ -52,7 +52,7 @@ $(function() {
                                     <div class="projectTimeSection">
                                     <p class="ticketId" style="display:${(list.issueId) ? 'block' : 'none'}">${(list.issueId) ? list.issueId : '-'}</p>
                                     <div class="loggedTime">${await _helper.minutesToHHMM(list.minute)}</div>
-                                    <button class="editBtn">Edit</button>
+                                    <button class="editBtn" data-taskDetails='${JSON.stringify(list)}'>Edit</button>
                                     </div>
                                     <div class="clear"></div>
                                 </div>`;
@@ -174,16 +174,23 @@ $(function() {
                 minutesOptions += `<option value='${i}m'>${i}</option>`;
             }
             $("#nTMinutes").html(minutesOptions);
+            $("#saveNewTask").html("Save").attr('data-action', 'save');
         });
         $("#newProjects").on('change', async(_e) => {
             const selectedProject = (_e.currentTarget as HTMLSelectElement).value;
             if($("#newProjects").val() !== '') {
-              const optionList:any = await _helper.setTaskOptionList(selectedProject);
+                let taskid = undefined;
+                const btnAction = $("#saveNewTask").attr('data-action');
+                if(btnAction == 'update') {
+                    taskid =  $("#newTasks").attr('data-selectedTask');
+                }
+              const optionList:any = await _helper.setTaskOptionList(selectedProject, taskid);
               $("#newTasks").html(optionList);
             }
         });
 
-        $("#saveNewTask").on('click', async() => {
+        $("#saveNewTask").on('click', async(_e) => {
+            let btnAction = _e.currentTarget.getAttribute('data-action');
             let project = $("#newProjects").val();
             let task = $("#newTasks").val();
             let hours = $("#nTHours").val();
@@ -207,7 +214,15 @@ $(function() {
                         }
                     ]
                 }
-                const result = await _helper.logTimetoKronos(logDetails);
+                let result;
+                if(btnAction == 'update') {
+                    const actRefNum = (<HTMLInputElement>document.getElementById('activiryRefNum')).value;
+                    logDetails.time[0].activityRefNumber = actRefNum;
+                    result = await _helper.updateTask(logDetails);
+                } else {
+                    result = await _helper.logTimetoKronos(logDetails);
+                } 
+
                 if(result) {
                     $("#cancelFrmBtn").click();
                     $("#loader").hide();
@@ -226,15 +241,36 @@ $(function() {
             $("#addTaskSec").hide();
         })
 
-        $(document).on('change', '.taskLists', async (_e) => {
-            let oldLoggedTask = _e.currentTarget.getAttribute('data-loggedTask');
-            let newTaskid = _e.currentTarget.value;
-            $("#loader").show();
-            const status = await _helper.updateTask(oldLoggedTask, newTaskid);
-            if(status == true){
-                $("#loader").hide(); 
-                restoreOptions();
+        $(document).on('click', '.editBtn', async (_e) => {
+            let loggedTask = _e.currentTarget.getAttribute('data-taskDetails');
+            loggedTask = JSON.parse(loggedTask);
+            const loggedTime = await _helper.minutesToHHMM(loggedTask.minute)
+            const hours = loggedTime.split(' ')[0];
+            const minutes = loggedTime.split(' ')[1];
+            
+            $("#newTasks").attr('data-selectedTask', loggedTask.tid);
+            $("#saveNewTask").html("Update").attr('data-action', 'update');
+            $("#loggedMsg").hide();
+            $("#addTaskSec").show();
+            await resetNewTaskForm();
+            $("#newProjects").html(await _helper.setProjectOptionList());
+            $("#newProjects").val(loggedTask.pid).change();
+            var hoursOptions = `<option value=''>Select hours</option>`;
+            for (let i = 1; i <= 12; i++) {
+                hoursOptions += `<option value='${i}h'>${i}</option>`;
             }
+            $("#nTHours").html(hoursOptions);
+            var minutesOptions = `<option value=''>Select minutes</option>`;
+            for (let i = 0; i < 60; i++) {
+                minutesOptions += `<option value='${i}m'>${i}</option>`;
+            }
+            $("#nTMinutes").html(minutesOptions);
+
+            $("#nTHours").val(hours.toLowerCase());
+            $("#nTMinutes").val(minutes.toLowerCase());
+            $("#details").val(loggedTask.note);
+            $("#activiryRefNum").val(loggedTask.activityRefNumber);
+
         });
 
     })

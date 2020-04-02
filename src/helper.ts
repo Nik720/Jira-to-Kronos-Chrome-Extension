@@ -232,14 +232,16 @@ export default class Helper {
         if(taskId && taskId !== "") {
             items.task = taskId;
         }
-        const taskArrayIds = taskList[0].taskList;
-        var taskOptions = "<option value=''>Select Task</option>";
-        this.projectMetaData.taskList.forEach(task => {
-            if(taskArrayIds.includes(task.id)) {
-                taskOptions += `<option value="${task.id}" ${(items.task && items.task == task.id) ? 'selected' : ''}>${task.name}</option>`;
-            }
-        });
-        return taskOptions;
+        if(taskList.length > 0) {
+            const taskArrayIds = taskList[0].taskList;
+            var taskOptions = "<option value=''>Select Task</option>";
+            this.projectMetaData.taskList.forEach(task => {
+                if(taskArrayIds.includes(task.id)) {
+                    taskOptions += `<option value="${task.id}" ${(items.task && items.task == task.id) ? 'selected' : ''}>${task.name}</option>`;
+                }
+            });
+            return taskOptions;
+        }
     }
 
     public minutesToHHMM = async(minutes:any) => {
@@ -248,19 +250,17 @@ export default class Helper {
         return `${hours}H ${min}M`;
     }
 
-    public updateTask = async(tdetails, newTaskid) => {
+    public updateTask = async(tdetails) => {
         const items:any = await this.getChromeStorageData({authToken: ''}).then((res) => { return res; });
         if(items.authToken) {
             let authToken = items.authToken
-            let oldTask = JSON.parse(tdetails);
-            oldTask.tid = newTaskid;
-            delete oldTask.issueId;
+            let oldTask = tdetails;
             return new Promise((resolve, reject) => {
                 $.ajax({
                     url : "https://kronos.idc.tarento.com/api/v1/user/updateTaskTimeForProjectFeature",
                     type: "POST",
                     contentType: 'application/json; charset=utf-8',
-                    data : JSON.stringify({'time': [oldTask]}),
+                    data : JSON.stringify(oldTask),
                     dataType: 'json',
                     headers: {
                         "Authorization": authToken
@@ -272,10 +272,12 @@ export default class Helper {
                                 const loggedTask = JSON.parse(items.loggedTaskList)
                                 const newLoggedTaskList = []
                                 loggedTask.list.map((task) => {
-                                    if(task.activityRefNumber === oldTask.activityRefNumber) {
-                                        task.tid = newTaskid;
+                                    if(task.activityRefNumber === oldTask.time[0].activityRefNumber) {
+                                        newLoggedTaskList.push(oldTask.time[0]);
+                                    } else {
+                                        newLoggedTaskList.push(task);
                                     }
-                                    newLoggedTaskList.push(task);
+                                    
                                 }); 
                                 loggedTask.list = newLoggedTaskList;
                                 const isDataStored = await this.setChromeStorageData({
