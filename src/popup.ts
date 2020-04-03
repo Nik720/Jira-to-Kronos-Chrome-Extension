@@ -63,7 +63,13 @@ $(function() {
             });
             
         } else {
-            $("#logTbl").find('tbody').html('');
+            let taskcard = `<div class="taskCard">
+                                <div class="taskSection">
+                                    <p class="taskName">Please add your time logs to Jira or add manually using above Add button</p>
+                                </div>
+                                <div class="clear"></div>
+                            </div>`;
+            $("#taskCards").html(taskcard);
         }
         $("#loader").hide();
     }
