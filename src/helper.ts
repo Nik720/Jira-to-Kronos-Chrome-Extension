@@ -138,7 +138,7 @@ export default class Helper {
 
     public handleLoggedTaskList = async(logDetails) => {
         const items: any = await this.getChromeStorageData({ loggedTaskList: '' }).then((item) => { return item });
-        if (items) {
+        if (items && logDetails.time[0].date === moment().format('YYYY-MM-DD')) {
             var parsedTime = {
                 currentDate: moment().format('YYYY-MM-DD'),
                 list: []
@@ -155,6 +155,8 @@ export default class Helper {
             if(isDataStored) {
                 return true;
             }
+        }else{
+            return true;    
         };
     }
 
