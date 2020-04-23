@@ -30,7 +30,23 @@
           <input class="form-control" type="password" placeholder="Enter Password" name="password" id="password" required>
           <span class="error"></span>
         </div>
-    
+
+        <div class="form-group">
+          <label><input type="checkbox" name="trntoKns" id="trntoKns"><b>Do you have tarento kronos?</b></label>
+        </div>
+        <div id="trt_login_frm" style="display: none;">
+          <div class="form-group">
+            <label for="email"><b>Tarento Email Address</b></label>
+            <input class="form-control" type="email" placeholder="Enter Email" name="trt_email" id="trt_email" required>
+            <span class="error"></span>
+          </div>
+          <div class="form-group">
+            <label for="password"><b>Password</b></label>
+            <input class="form-control" type="password" placeholder="Enter Password" name="trt_password" id="trt_password" required>
+            <span class="error"></span>
+          </div>
+        </div>
+
         <button type="submit" id="save" class="btn">Save</button>
         <span id="status"></span>
        </div> 

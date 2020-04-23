@@ -4,6 +4,13 @@ import Helper from './helper';
 (function () {
   const _helper = new Helper();
   $(document).ready(async() => {
+      const isTarentoKronos:any = await _helper.getChromeStorageData({trntoKns: ''}).then((res) => { return res; });
+      if(isTarentoKronos.trntoKns) {
+        $("#trt_kronos_details").show();
+      } else {
+        $("#trt_kronos_details").hide();
+      }
+
       if(Object.keys(_helper.projectMetaData).length <= 0) {
         await fetchAllprojectDetails();
       }

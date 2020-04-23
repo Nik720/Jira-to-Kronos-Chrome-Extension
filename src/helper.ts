@@ -176,10 +176,15 @@ export default class Helper {
                 }
             });
         }
-        
     }
 
     public fetchAllProjectDetails = async() => {
+        const ekstepDetails = await this.fetchEkstepKronosDetails();
+        const tarentoDetails = await this.fetchTarentoKronosDetails();
+        return ekstepDetails;
+    }
+
+    public fetchEkstepKronosDetails = async() => {
         const fdata = {};
         const items:any = await this.getChromeStorageData({
             email: '',
@@ -213,9 +218,42 @@ export default class Helper {
                     }
                 });
             })
-            
         }
-        
+    }
+    public fetchTarentoKronosDetails = async() => {
+        const fdata = {};
+        const items:any = await this.getChromeStorageData({
+            trt_email: '',
+            trt_password: '',
+            trt_authToken: '',
+        }).then((res) => {return res;})
+        if(items) {
+            let authToken = items.trt_authToken
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url : "https://kronos.idc.tarento.com/api/v1/user/getAllProjectTask",
+                    type: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify(fdata),
+                    headers: {
+                        "Authorization": authToken
+                    },
+                    success: async (data) => {
+                        if(data.statusCode === 401) {
+                            await this.reAuthenticate(this.fetchAllProjectDetails)
+                        }else if(data.statusCode === 200) {
+                            const resData = data.responseData;
+                            localStorage.setItem("trt_ProjectMetaData", JSON.stringify(resData));
+                            resolve(resData);
+                        }
+                    },
+                    error: function (jqXHR)
+                    {
+                        reject(jqXHR);
+                    }
+                });
+            })
+        }
     }
 
     public setProjectOptionList = async() => {

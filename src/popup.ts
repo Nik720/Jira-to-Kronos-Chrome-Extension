@@ -85,6 +85,10 @@ $(function() {
     const saveOptions = async() => {
         var email = $("#email").val();
         var password = $("#password").val();
+        var trntoKns = $("#trntoKns").prop("checked");
+        var trt_email = $("#trt_email").val();
+        var trt_password = $("#trt_password").val();
+        _helper.setChromeStorageData({trntoKns: trntoKns}).then((res) => { return res; });
         if(email == '') {
             return setValidationMsg('email','Email address is required');
         } else if(await IsEmail(email) == false){
@@ -96,9 +100,30 @@ $(function() {
             "username": email,
             "password": password
         };
+        const trt_userDetails = {
+            "username": trt_email,
+            "password": trt_password
+        };
         
         var data:any = await _helper.authenticate(userDetails);
-        if(data.statusCode == 200) {
+        if(trntoKns) {
+            var trt_data:any = await _helper.authenticate(trt_userDetails);
+            if(trt_data.statusCode == 400) {
+                $("#loggedErr").show();
+                setTimeout(function () {
+                    $("#loggedErr").hide();
+                }, 3000);
+                return false;
+            }else if(trt_data.statusCode==200) {
+                const authToken = trt_data.responseData.sessionId
+                _helper.setChromeStorageData({
+                    trt_email: userDetails.username,
+                    trt_password: userDetails.password,
+                    trt_authToken: authToken
+                }).then((res) => { return res; })
+            }
+        }
+        if(data.statusCode == 200 ) {
             const authToken = data.responseData.sessionId
             const setDataToSotage = _helper.setChromeStorageData({
                 email: userDetails.username,
@@ -278,6 +303,14 @@ $(function() {
             $("#activiryRefNum").val(loggedTask.activityRefNumber);
 
         });
+
+        $("#trntoKns").on('click', function(){
+            if($(this).prop("checked")) {
+                $("#trt_login_frm").show();
+            } else {
+                $("#trt_login_frm").hide();
+            }
+        })
 
     })
 
