@@ -22,6 +22,14 @@ $(function() {
             $('#totalLoggedTime').html('0H 0M');
             if(csData.loggedTaskList !== "") {
                 await prepareTaskTable(csData.loggedTaskList)
+            } else {
+                let taskcard = `<div class="taskCard">
+                                    <div class="taskSection">
+                                        <p class="taskName">Please add your time logs to Jira or add manually using above Add button</p>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>`;
+                $("#taskCards").html(taskcard);
             }
             $("#editDetails").show();
             $("#logList").hide();
@@ -171,7 +179,7 @@ $(function() {
             $("#newProjects").html(await _helper.setProjectOptionList());
             (items.project !== '') ? $("#newProjects").val(items.project).change() : '';
             var hoursOptions = `<option value=''>Select hours</option>`;
-            for (let i = 1; i <= 12; i++) {
+            for (let i = 0; i <= 12; i++) {
                 hoursOptions += `<option value='${i}h'>${i}</option>`;
             }
             $("#nTHours").html(hoursOptions);
